@@ -96,12 +96,12 @@ exit if chapters.empty?
 # Build actual feed
 atom = RSS::Maker.make("atom") do |maker|
   maker.channel.authors.new_author do |author|
-    author.name = "Latest chapters from MangaDex Girls' Love tag"
-    author.uri = "https://github.com/kagari-mimi/u/"
+    author.name = "Latest chapters from MangaDex"
+    author.uri = "https://github.com/TNTKien/rss"
   end
 
-  maker.channel.id = "https://mangadex.org/tag/a3c67850-4684-404e-9b7f-c69850ee5da6/girls-love"
-  maker.channel.title = "Latest Girls' Love Chapters from MangaDex"
+  maker.channel.id = "https://dev.suicaodex.com"
+  maker.channel.title = "Latest Chapters from MangaDex"
   maker.channel.updated = chapters.first["attributes"]["updatedAt"]
 
   chapters.each do |chapter|
@@ -122,7 +122,7 @@ atom = RSS::Maker.make("atom") do |maker|
     scanlation_groups = chapter["relationships"].filter_map do |relationship|
       next unless relationship["type"] == "scanlation_group"
 
-      %(<a href="https://mangadex.org/group/#{relationship['id']}">#{CGI.escapeHTML(relationship['attributes']['name'])}</a>)
+      %(<a href="https://dev.suicaodex.com/group/#{relationship['id']}">#{CGI.escapeHTML(relationship['attributes']['name'])}</a>)
     end.join(", ")
 
     tags = manga["attributes"]["tags"].map do |tag|
@@ -137,7 +137,7 @@ atom = RSS::Maker.make("atom") do |maker|
     tags = tags.join(", ")
 
     maker.items.new_item do |item|
-      item.id = "https://mangadex.org/chapter/#{chapter['id']}"
+      item.id = "https://dev.suicaodex.com/chapter/#{chapter['id']}"
       item.title = title
       item.link = item.id
       item.updated = chapter["attributes"]["updatedAt"]
@@ -146,21 +146,21 @@ atom = RSS::Maker.make("atom") do |maker|
         authors[manga["id"]].each do |author|
           item.authors.new_author do |author_item|
             author_item.name = CGI.escapeHTML(author["attributes"]["name"])
-            author_item.uri = "https://mangadex.org/author/#{author['id']}"
+            author_item.uri = "https://dev.suicaodex.com/author/#{author['id']}"
           end
         end
       else
         authors[manga["id"]]&.each do |author|
           item.authors.new_author do |author_item|
             author_item.name = "#{CGI.escapeHTML(author['attributes']['name'])} (Author)"
-            author_item.uri = "https://mangadex.org/author/#{author['id']}"
+            author_item.uri = "https://dev.suicaodex.com/author/#{author['id']}"
           end
         end
 
         artists[manga["id"]]&.each do |artist|
           item.authors.new_author do |artist_item|
             artist_item.name = "#{CGI.escapeHTML(artist['attributes']['name'])} (Artist)"
-            artist_item.uri = "https://mangadex.org/author/#{artist['id']}"
+            artist_item.uri = "https://dev.suicaodex.com/author/#{artist['id']}"
           end
         end
       end
@@ -171,10 +171,10 @@ atom = RSS::Maker.make("atom") do |maker|
         </p>
         <p>
           <strong>Title:</strong>
-          <a href="https://mangadex.org/title/#{manga['id']}">#{manga_title}</a>
+          <a href="https://dev.suicaodex.com/manga/#{manga['id']}">#{manga_title}</a>
         </p>
         <p>
-          <strong>Scanlation Group:</strong>
+          <strong>Group:</strong>
           #{scanlation_groups || '<em>No Group</em>'}
         </p>
         <p>
