@@ -96,12 +96,12 @@ exit if chapters.empty?
 # Build actual feed
 atom = RSS::Maker.make("atom") do |maker|
   maker.channel.authors.new_author do |author|
-    author.name = "Latest chapters from MangaDex"
+    author.name = "Latest chapters from SuicaoDex"
     author.uri = "https://github.com/TNTKien/rss"
   end
 
   maker.channel.id = "https://dev.suicaodex.com"
-  maker.channel.title = "Latest Chapters from MangaDex"
+  maker.channel.title = "Latest Chapters from SuicaoDex"
   maker.channel.updated = chapters.first["attributes"]["updatedAt"]
 
   chapters.each do |chapter|
@@ -137,9 +137,11 @@ atom = RSS::Maker.make("atom") do |maker|
     tags = tags.join(", ")
 
     maker.items.new_item do |item|
-      item.id = "https://dev.suicaodex.com/chapter/#{chapter['id']}"
+      item.id = chapter["id"]
+      item.m_id = manga["id"]
       item.title = title
-      item.link = item.id
+      item.cover_art = cover_art
+      item.link = "https://dev.suicaodex.com/chapter/#{chapter['id']}"
       item.updated = chapter["attributes"]["updatedAt"]
 
       if authors[manga["id"]]&.map { _1["id"] } == artists[manga["id"]]&.map { _1["id"] }
