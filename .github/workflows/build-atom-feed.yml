@@ -1,0 +1,45 @@
+name: build-atom-feed
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '*/5 * * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  build-atom-feed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v3
+        with:
+          path: main
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+          path: gh-pages
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ruby
+      - name: Generate Atom feed
+        run: |
+          cd main && ruby build_atom_feed.rb > index.xml
+      - name: Copy feed to gh-pages checkout
+        id: copy
+        run: |
+          if [ -s main/index.xml ]; then
+            cp main/index.xml gh-pages/index.xml
+            echo "commit=1" >> $GITHUB_OUTPUT
+          fi
+      - name: Create a new commit on gh-pages branch
+        uses: EndBug/add-and-commit@v9
+        if: steps.copy.outputs.commit == '1'
+        with:
+          cwd: gh-pages
+          default_author: github_actions
+          message: Update Atom feed
