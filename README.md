@@ -1,1 +1,0 @@
-thank you [kagari-mimi](https://github.com/kagari-mimi)
