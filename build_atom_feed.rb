@@ -137,10 +137,22 @@ atom = RSS::Maker.make("atom") do |maker|
     tags = tags.join(", ")
 
     maker.items.new_item do |item|
-      item.id = chapter['id']
+      item.id = chapter["id"]
       item.title = title
       item.link = "https://dev.suicaodex.com/chapter/#{chapter['id']}"
       item.updated = chapter["attributes"]["updatedAt"]
+
+      item.categories.new_category do |category|
+        category.term = manga["id"]
+        category.scheme = "https://dev.suicaodex.com/manga/#{manga['id']}"
+        category.label = manga_title
+      end
+
+      item.categories.new_category do |category|
+        category.term = cover_art
+        category.scheme = cover_art
+        category.label = "cover"
+      end
 
       if authors[manga["id"]]&.map { _1["id"] } == artists[manga["id"]]&.map { _1["id"] }
         authors[manga["id"]].each do |author|
