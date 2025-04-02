@@ -137,10 +137,8 @@ atom = RSS::Maker.make("atom") do |maker|
     tags = tags.join(", ")
 
     maker.items.new_item do |item|
-      item.id = chapter["id"]
-      item.m_id = manga["id"]
+      item.id = chapter['id']
       item.title = title
-      item.cover_art = cover_art
       item.link = "https://dev.suicaodex.com/chapter/#{chapter['id']}"
       item.updated = chapter["attributes"]["updatedAt"]
 
