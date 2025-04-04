@@ -154,29 +154,6 @@ atom = RSS::Maker.make("atom") do |maker|
       #   category.label = "cover"
       # end
 
-      if authors[manga["id"]]&.map { _1["id"] } == artists[manga["id"]]&.map { _1["id"] }
-        authors[manga["id"]].each do |author|
-          item.authors.new_author do |author_item|
-            author_item.name = CGI.escapeHTML(author["attributes"]["name"])
-            author_item.uri = "https://dev.suicaodex.com/author/#{author['id']}"
-          end
-        end
-      else
-        authors[manga["id"]]&.each do |author|
-          item.authors.new_author do |author_item|
-            author_item.name = "#{CGI.escapeHTML(author['attributes']['name'])} (Author)"
-            author_item.uri = "https://dev.suicaodex.com/author/#{author['id']}"
-          end
-        end
-
-        artists[manga["id"]]&.each do |artist|
-          item.authors.new_author do |artist_item|
-            artist_item.name = "#{CGI.escapeHTML(artist['attributes']['name'])} (Artist)"
-            artist_item.uri = "https://dev.suicaodex.com/author/#{artist['id']}"
-          end
-        end
-      end
-
       item.content.content = <<~HTML.strip
         <p>
           <img src="#{cover_art}"/>
